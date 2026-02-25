@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartCare HMS</title>
+
+  <!-- ✅ External CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- 🔐 LOGIN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <h2>🔐 SmartCare Login</h2>
+      <input id="username" placeholder="Username"><br>
+      <input id="password" type="password" placeholder="Password"><br>
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <!-- ✅ SIDEBAR -->
+  <div class="sidebar">
+    <h2>🏥 SmartCare HMS</h2>
+    <ul class="menu">
+      <li class="active" onclick="showSection('dashboard', this)">🏠 Dashboard</li>
+      <li onclick="showSection('patients', this)">👤 Patients</li>
+      <li onclick="showSection('doctors', this)">👨‍⚕️ Doctors</li>
+      <li onclick="showSection('appointments', this)">📅 Appointments</li>
+      <li onclick="showSection('billing', this)">💳 Billing</li>
+    </ul>
+  </div>
+
+  <!-- ✅ MAIN -->
+  <div class="main">
+
+    <div id="dashboard" class="section">
+      <h2>Dashboard</h2>
+      <h3>Total Patients: <span id="totalPatients">0</span></h3>
+    </div>
+
+    <div id="patients" class="section" style="display:none">
+      <h2>Patients</h2>
+      <input id="pname" placeholder="Name"><br>
+      <input id="page" type="number" placeholder="Age"><br>
+      <select id="pgender">
+        <option value="">Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select><br>
+      <button onclick="addPatient()">Add Patient</button>
+      <ul id="patientList"></ul>
+    </div>
+
+    <div id="doctors" class="section" style="display:none">
+      <h2>Doctor Panel</h2>
+      <input id="dname" placeholder="Doctor Name"><br>
+      <input id="dspec" placeholder="Specialization"><br>
+      <button onclick="addDoctor()">Add Doctor</button>
+      <ul id="doctorList"></ul>
+    </div>
+
+    <div id="appointments" class="section" style="display:none">
+      <h2>Appointments</h2>
+      <input id="aname" placeholder="Patient Name"><br>
+      <input id="adate" type="date"><br>
+      <button onclick="addAppointment()">Book</button>
+      <ul id="appointmentList"></ul>
+    </div>
+
+    <div id="billing" class="section" style="display:none">
+      <h2>Billing</h2>
+      <input id="bname" placeholder="Patient Name"><br>
+      <input id="bamount" type="number" placeholder="Amount"><br>
+      <button onclick="addBill()">Generate Bill</button>
+      <ul id="billingList"></ul>
+    </div>
+
+  </div>
+
+  <!-- 🔔 TOAST -->
+  <div id="toast" class="toast">Success</div>
+
+  <!-- ✅ External JS -->
+  <script src="js/app.js"></script>
+
+</body>
+</html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartCare HMS</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background: linear-gradient(135deg, #dbeafe, #f5f7fa);
+    }
+
+    /* 🔐 LOGIN SCREEN */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #2b7cff, #6ea8ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .login-box input {
+      width: 220px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    /* ✅ SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(14px);
+      padding: 20px;
+    }
+
+    .menu li {
+      list-style: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: 0.3s;
+    }
+
+    .menu li:hover {
+      background: rgba(43,124,255,0.15);
+      box-shadow: 0 0 12px rgba(43,124,255,0.35);
+      transform: translateX(6px);
+    }
+
+    .active {
+      background: rgba(43,124,255,0.25);
+      box-shadow: 0 0 14px rgba(43,124,255,0.45);
+    }
+
+    /* ✅ MAIN */
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .section {
+      background: rgba(255,255,255,0.7);
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    input, select {
+      padding: 10px;
+      margin: 6px 0;
+      width: 240px;
+    }
+
+    button {
+      padding: 10px 16px;
+      background: #2b7cff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1a5fd0;
+    }
+
+    li {
+      background: white;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 10px;
+      list-style: none;
+    }
+
+    /* 🔔 TOAST */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #2b7cff;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔐 LOGIN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>🔐 SmartCare Login</h2>
+    <input id="username" placeholder="Username"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+  </div>
+</div>
+
+<!-- ✅ SIDEBAR -->
+<div class="sidebar">
+  <h2>🏥 SmartCare HMS</h2>
+  <ul class="menu">
+    <li class="active" onclick="showSection('dashboard', this)">🏠 Dashboard</li>
+    <li onclick="showSection('patients', this)">👤 Patients</li>
+    <li onclick="showSection('doctors', this)">👨‍⚕️ Doctors</li>
+    <li onclick="showSection('appointments', this)">📅 Appointments</li>
+    <li onclick="showSection('billing', this)">💳 Billing</li>
+  </ul>
+</div>
+
+<!-- ✅ MAIN -->
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="section">
+    <h2>Dashboard</h2><br>
+    <h3>Total Patients: <span id="totalPatients">0</span></h3>
+  </div>
+
+  <!-- PATIENTS -->
+  <div id="patients" class="section" style="display:none">
+    <h2>Patients</h2><br>
+
+    <input id="pname" placeholder="Name"><br>
+    <input id="page" type="number" placeholder="Age"><br>
+    <select id="pgender">
+      <option value="">Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+    </select><br>
+
+    <button onclick="addPatient()">Add Patient</button>
+
+    <ul id="patientList"></ul>
+  </div>
+
+  <!-- DOCTORS -->
+  <div id="doctors" class="section" style="display:none">
+    <h2>Doctor Panel 👨‍⚕️</h2><br>
+
+    <input id="dname" placeholder="Doctor Name"><br>
+    <input id="dspec" placeholder="Specialization"><br>
+    <button onclick="addDoctor()">Add Doctor</button>
+
+    <ul id="doctorList"></ul>
+  </div>
+
+  <!-- APPOINTMENTS -->
+  <div id="appointments" class="section" style="display:none">
+    <h2>Appointments 📅</h2><br>
+
+    <input id="aname" placeholder="Patient Name"><br>
+    <input id="adate" type="date"><br>
+    <button onclick="addAppointment()">Book</button>
+
+    <ul id="appointmentList"></ul>
+  </div>
+
+  <!-- BILLING -->
+  <div id="billing" class="section" style="display:none">
+    <h2>Billing 💳</h2><br>
+
+    <input id="bname" placeholder="Patient Name"><br>
+    <input id="bamount" type="number" placeholder="Amount"><br>
+    <button onclick="addBill()">Generate Bill</button>
+
+    <ul id="billingList"></ul>
+  </div>
+
+</div>
+
+<div id="toast" class="toast">Success</div>
+
+<script>
+  const API = "http://127.0.0.1:5000/api/patients";
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+  }
+
+  function login() {
+    if (username.value === "admin" && password.value === "admin") {
+      loginScreen.style.display = "none";
+      showToast("Login Successful 🔐");
+    } else {
+      alert("Invalid login");
+    }
+  }
+
+  function showSection(id, el) {
+    document.querySelectorAll(".main .section")
+      .forEach(sec => sec.style.display = "none");
+
+    document.getElementById(id).style.display = "block";
+
+    document.querySelectorAll(".menu li")
+      .forEach(li => li.classList.remove("active"));
+
+    el.classList.add("active");
+  }
+
+  async function loadPatients() {
+    const res = await fetch(API);
+    const patients = await res.json();
+
+    totalPatients.innerText = patients.length;
+    patientList.innerHTML = "";
+
+    patients.forEach(p => {
+      const li = document.createElement("li");
+      li.innerText = `${p.name} | ${p.gender}`;
+      patientList.appendChild(li);
+    });
+  }
+
+  async function addPatient() {
+    const patient = {
+      name: pname.value,
+      age: page.value,
+      gender: pgender.value
+    };
+
+    await fetch(`${API}/add`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(patient)
+    });
+
+    showToast("Patient Added 👤");
+    loadPatients();
+  }
+
+  function addDoctor() {
+    const doctors = JSON.parse(localStorage.getItem("doctors") || "[]");
+    doctors.push({ name: dname.value, spec: dspec.value });
+    localStorage.setItem("doctors", JSON.stringify(doctors));
+
+    renderDoctors();
+    showToast("Doctor Added 👨‍⚕️");
+  }
+
+  function renderDoctors() {
+    const doctors = JSON.parse(localStorage.getItem("doctors") || "[]");
+    doctorList.innerHTML = "";
+
+    doctors.forEach(d => {
+      const li = document.createElement("li");
+      li.innerText = `${d.name} | ${d.spec}`;
+      doctorList.appendChild(li);
+    });
+  }
+
+  function addAppointment() {
+    const appts = JSON.parse(localStorage.getItem("appointments") || "[]");
+    appts.push({ name: aname.value, date: adate.value });
+    localStorage.setItem("appointments", JSON.stringify(appts));
+
+    renderAppointments();
+    showToast("Appointment Booked 📅");
+  }
+
+  function renderAppointments() {
+    const appts = JSON.parse(localStorage.getItem("appointments") || "[]");
+    appointmentList.innerHTML = "";
+
+    appts.forEach(a => {
+      const li = document.createElement("li");
+      li.innerText = `${a.name} | 📅 ${a.date}`;
+      appointmentList.appendChild(li);
+    });
+  }
+
+  function addBill() {
+    const bills = JSON.parse(localStorage.getItem("bills") || "[]");
+    bills.push({ name: bname.value, amount: bamount.value });
+    localStorage.setItem("bills", JSON.stringify(bills));
+
+    renderBills();
+    showToast("Bill Generated 💳");
+  }
+
+  function renderBills() {
+    const bills = JSON.parse(localStorage.getItem("bills") || "[]");
+    billingList.innerHTML = "";
+
+    bills.forEach(b => {
+      const li = document.createElement("li");
+      li.innerText = `${b.name} | ₹${b.amount}`;
+      billingList.appendChild(li);
+    });
+  }
+
+  loadPatients();
+  renderDoctors();
+  renderAppointments();
+  renderBills();
+</script>
+
+</body>
+</html>
