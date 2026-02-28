@@ -265,9 +265,11 @@ actionBtn.onclick = async function() {
     }
   }
 
+  const BASE_URL = "https://smartcare-hms-backend.onrender.com/api";
+
   const url = isLogin
-    ? "http://127.0.0.1:5000/api/auth/login"
-    : "http://127.0.0.1:5000/api/auth/signup";
+    ? `${BASE_URL}/auth/login`
+    : `${BASE_URL}/auth/signup`;
 
   const body = isLogin
     ? { username, password }
