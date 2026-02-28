@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartCare HMS - Appointments</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin:0;
+      font-family:'Segoe UI',sans-serif;
+      background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+      min-height:100vh;
+      color:white;
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    /* Background Glow */
+    body::before, body::after {
+      content:"";
+      position:absolute;
+      width:400px;
+      height:400px;
+      border-radius:50%;
+      filter:blur(150px);
+      z-index:-1;
+    }
+
+    body::before {
+      background: rgba(0,123,255,0.3);
+      top:-150px;
+      left:-150px;
+    }
+
+    body::after {
+      background: rgba(0,255,255,0.2);
+      bottom:-150px;
+      right:-150px;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      padding:15px 30px;
+      display:flex;
+      gap:25px;
+      align-items:center;
+      border-bottom:1px solid rgba(255,255,255,0.15);
+    }
+
+    .navbar a {
+      color:#ddd;
+      text-decoration:none;
+      font-weight:500;
+      transition:0.3s;
+    }
+
+    .navbar a:hover {
+      color:#00c6ff;
+    }
+
+    .navbar button {
+      margin-left:auto;
+      background: linear-gradient(90deg,#00c6ff,#0072ff);
+      border:none;
+      padding:8px 18px;
+      border-radius:25px;
+      color:white;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .container {
+      padding:40px;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    h3 {
+      margin-bottom:20px;
+      color:#ddd;
+    }
+
+    /* GLASS CARD */
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(15px);
+      padding:25px;
+      border-radius:20px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.4);
+      border:1px solid rgba(255,255,255,0.15);
+      margin-bottom:30px;
+    }
+
+    /* FORM */
+    .form-row {
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    input, select {
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color:rgb(21, 1, 1);
+      flex:1;
+      min-width:160px;
+      outline:none;
+      transition:0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color:#00c6ff;
+    }
+
+    .primary-btn {
+      background: linear-gradient(90deg,#00c6ff,#0072ff);
+      border:none;
+      border-radius:25px;
+      padding:12px 25px;
+      cursor:pointer;
+      color:white;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .primary-btn:hover {
+      transform:translateY(-3px);
+    }
+
+    .delete-btn {
+      background:#dc3545;
+      border:none;
+      padding:6px 12px;
+      border-radius:8px;
+      color:white;
+      cursor:pointer;
+    }
+
+    /* TABLE */
+    table {
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th, td {
+      padding:14px;
+      text-align:center;
+    }
+
+    th {
+      background: rgba(255,255,255,0.15);
+      color:#ddd;
+    }
+
+    tr {
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    td button {
+      margin:3px;
+      padding:6px 12px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <a href="/dashboard.html">Dashboard</a>
+  <a href="/patients.html">Patients</a>
+  <a href="/doctors.html">Doctors</a>
+  <a href="/appointments.html">Appointments</a>
+  <a href="/billing.html">Billing</a>
+  <a href="/reports.html">Reports</a>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h3>Create / Update Appointment</h3>
+    <div class="form-row">
+      <select id="apatient"></select>
+      <select id="adoctor"></select>
+      <input type="date" id="adate">
+      <button class="primary-btn" onclick="handleAppointment()">Save</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Appointment List</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="appointmentTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+let editingAppointmentId=null;
+const token=localStorage.getItem("token");
+const API="http://127.0.0.1:5000/api";
+
+if(!token){
+  window.location.href="/";
+  return;
+}
+
+async function loadPatients(){
+  const res=await fetch(`${API}/patients`,{
+    headers:{ Authorization:"Bearer "+token }
+  });
+  const data=await res.json();
+  apatient.innerHTML="<option value=''>Select Patient</option>";
+  data.forEach(p=>{
+    apatient.innerHTML+=`<option value="${p._id}">${p.name}</option>`;
+  });
+}
+
+async function loadDoctors(){
+  const res=await fetch(`${API}/doctors`,{
+    headers:{ Authorization:"Bearer "+token }
+  });
+  const data=await res.json();
+  adoctor.innerHTML="<option value=''>Select Doctor</option>";
+  data.forEach(d=>{
+    adoctor.innerHTML+=`<option value="${d._id}">${d.name}</option>`;
+  });
+}
+
+async function loadAppointments(){
+  const res=await fetch(`${API}/appointments`,{
+    headers:{ Authorization:"Bearer "+token }
+  });
+  const data=await res.json();
+  const table=document.getElementById("appointmentTable");
+  table.innerHTML="";
+
+  data.forEach(a=>{
+    table.innerHTML+=`
+      <tr>
+        <td>${a.patient?.name||"N/A"}</td>
+        <td>${a.doctor?.name||"N/A"}</td>
+        <td>${new Date(a.date).toLocaleDateString()}</td>
+        <td>
+          <button onclick="editAppointment('${a._id}','${a.patient?._id}','${a.doctor?._id}','${a.date}')">Edit</button>
+          <button class="delete-btn" onclick="deleteAppointment('${a._id}')">Delete</button>
+        </td>
+      </tr>`;
+  });
+}
+
+window.editAppointment=function(id,patientId,doctorId,date){
+  editingAppointmentId=id;
+  apatient.value=patientId;
+  adoctor.value=doctorId;
+  adate.value=date.split("T")[0];
+};
+
+window.handleAppointment=async function(){
+  const body={
+    patient:apatient.value,
+    doctor:adoctor.value,
+    date:adate.value
+  };
+
+  if(editingAppointmentId){
+    await fetch(`${API}/appointments/${editingAppointmentId}`,{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json",
+        Authorization:"Bearer "+token
+      },
+      body:JSON.stringify(body)
+    });
+    editingAppointmentId=null;
+  } else {
+    await fetch(`${API}/appointments`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        Authorization:"Bearer "+token
+      },
+      body:JSON.stringify(body)
+    });
+  }
+
+  loadAppointments();
+};
+
+window.deleteAppointment=async function(id){
+  await fetch(`${API}/appointments/${id}`,{
+    method:"DELETE",
+    headers:{ Authorization:"Bearer "+token }
+  });
+  loadAppointments();
+};
+
+window.logout=function(){
+  localStorage.clear();
+  window.location.href="/";
+};
+
+loadPatients();
+loadDoctors();
+loadAppointments();
+
+});
+</script>
+
+</body>
+</html>

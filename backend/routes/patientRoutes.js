@@ -1,51 +1,63 @@
 const express = require("express");
 const router = express.Router();
 const Patient = require("../models/Patient");
+const auth = require("../middleware/auth");
 
-// ✅ Add Patient
-router.post("/add", async (req, res) => {
-  console.log("📥 Add Patient Request:", req.body);
-
+// ================= GET ALL =================
+router.get("/", auth, async (req, res) => {
   try {
-    const patient = new Patient(req.body);
-    await patient.save();
-
-    console.log("✅ Patient Saved");
-    res.json({ message: "✅ Patient Added Successfully" });
-
-  } catch (error) {
-    console.log("❌ Error:", error.message);
-    res.status(400).json({ error: error.message });
+    const patients = await Patient.find();
+    res.json(patients);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ Get Patients
-router.get("/", async (req, res) => {
-  const patients = await Patient.find();
-  res.json(patients);
+// ================= CREATE =================
+router.post("/", auth, async (req, res) => {
+  try {
+    const { name, age, gender, contact } = req.body;
+
+    if (!name || !age || !gender || !contact) {
+      return res.status(400).json({ error: "All fields required" });
+    }
+
+    const newPatient = new Patient({
+      name,
+      age,
+      gender,
+      contact
+    });
+
+    await newPatient.save();
+    res.json(newPatient);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// ✅ Delete Patient
-router.delete("/:id", async (req, res) => {
+// ================= UPDATE =================
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const updated = await Patient.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= DELETE =================
+router.delete("/:id", auth, async (req, res) => {
   try {
     await Patient.findByIdAndDelete(req.params.id);
-    res.json({ message: "❌ Patient Deleted Successfully" });
-
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// ✅ Update Patient
-router.put("/:id", async (req, res) => {
-  console.log("✏️ Update Request:", req.body);
-
-  try {
-    await Patient.findByIdAndUpdate(req.params.id, req.body);
-    res.json({ message: "✏️ Patient Updated Successfully" });
-
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.json({ message: "Patient deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -1,0 +1,147 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #dbeafe, #f5f7fa);
+}
+
+/* 🔐 LOGIN */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #2b7cff, #6ea8ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.login-box {
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.login-box input {
+  padding: 10px;
+  margin: 10px 0;
+  width: 220px;
+}
+
+/* ✅ SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(14px);
+  padding: 20px;
+  border-right: 1px solid rgba(255,255,255,0.3);
+}
+
+.sidebar h2 {
+  margin-bottom: 25px;
+  color: #2b7cff;
+}
+
+.menu li {
+  list-style: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: 0.3s;
+}
+
+.menu li:hover {
+  background: rgba(43,124,255,0.15);
+  box-shadow: 0 0 12px rgba(43,124,255,0.35);
+  transform: translateX(6px);
+}
+
+.active {
+  background: rgba(43,124,255,0.25);
+  box-shadow: 0 0 14px rgba(43,124,255,0.45);
+}
+
+/* ✅ MAIN */
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.section {
+  background: rgba(255,255,255,0.7);
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Inputs */
+input, select {
+  padding: 10px;
+  margin: 6px 0;
+  width: 240px;
+}
+
+button {
+  padding: 10px 16px;
+  background: #2b7cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #1a5fd0;
+  transform: scale(1.05);
+}
+
+li {
+  background: white;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 10px;
+  list-style: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ✨ Animations */
+.fade {
+  animation: fadeSlide 0.35s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🔔 TOAST */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2b7cff;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
