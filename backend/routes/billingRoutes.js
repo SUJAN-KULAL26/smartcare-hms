@@ -180,4 +180,25 @@ router.get("/report/doctor-wise", auth, role(["Admin"]), async (req, res) => {
   }
 });
 
+/*
+=====================================
+DELETE BILL
+=====================================
+*/
+router.delete("/:id", auth, async (req, res) => {
+  try {
+
+    const bill = await Billing.findByIdAndDelete(req.params.id);
+
+    if (!bill) {
+      return res.status(404).json({ error: "Bill not found" });
+    }
+
+    res.json({ message: "Bill deleted successfully" });
+
+  } catch (err) {
+    console.error("DELETE BILL ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

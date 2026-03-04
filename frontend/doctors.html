@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>SmartCare HMS - Doctors</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
       box-sizing: border-box;
@@ -43,14 +43,15 @@
 
     /* NAVBAR */
     .navbar {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(12px);
-      padding:15px 30px;
-      display:flex;
-      gap:25px;
-      align-items:center;
-      border-bottom:1px solid rgba(255,255,255,0.15);
-    }
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  padding:15px 20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.15);
+}
 
     .navbar a {
       color:#ddd;
@@ -74,11 +75,23 @@
       font-weight:bold;
     }
 
-    .container {
-      padding:40px;
-      max-width:1200px;
-      margin:auto;
-    }
+   .container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 12px;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 40px;
+  }
+}
 
     h3 {
       margin-bottom:20px;
@@ -102,19 +115,31 @@
       gap:15px;
       flex-wrap:wrap;
     }
+    @media (max-width:600px){
 
-    input {
-      padding:12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.08);
-      color:white;
-      flex:1;
-      min-width:160px;
-      outline:none;
-      transition:0.3s;
-    }
+  .form-row{
+    flex-direction:column;
+  }
 
+  .form-row input,
+  .form-row select,
+  .form-row button{
+    width:100%;
+  }
+
+}
+
+    input, select {
+  padding:12px;
+  min-height:42px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  flex:1;
+  min-width:160px;
+  outline:none;
+  transition:0.3s;
+}
     input:focus {
       border-color:#00c6ff;
     }
@@ -175,6 +200,49 @@
       cursor:pointer;
     }
 
+   @media (max-width:768px){
+
+  .navbar{
+    justify-content:center;
+  }
+
+  .navbar button{
+    width:100%;
+    margin-left:0;
+  }
+
+}
+
+.navbar a{
+  white-space:nowrap;
+}
+
+@media (max-width:600px){
+
+  .navbar{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+  }
+
+  .navbar::-webkit-scrollbar{
+    display:none;
+  }
+
+}
+.table-wrapper{
+  width:100%;
+  overflow-x:auto;
+}
+@media (max-width:480px){
+
+  body::before,
+  body::after{
+    width:250px;
+    height:250px;
+  }
+
+}
+
   </style>
 </head>
 
@@ -205,7 +273,8 @@
 
   <div class="card">
     <h3>Doctor List</h3>
-    <table>
+    <div class="table-wrapper">
+<table>
       <thead>
         <tr>
           <th>Name</th>
@@ -217,6 +286,7 @@
       </thead>
       <tbody id="doctorTable"></tbody>
     </table>
+    </div>
   </div>
 
 </div>
