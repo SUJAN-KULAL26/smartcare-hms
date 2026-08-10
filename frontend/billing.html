@@ -1,315 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>SmartCare HMS - Billing</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin:0;
-      font-family:'Segoe UI',sans-serif;
-      background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-      min-height:100vh;
-      color:white;
-      position:relative;
-      overflow-x:hidden;
-    }
-
-    /* Background Glow */
-    body::before, body::after {
-      content:"";
-      position:absolute;
-      width:400px;
-      height:400px;
-      border-radius:50%;
-      filter:blur(150px);
-      z-index:-1;
-    }
-
-    body::before {
-      background: rgba(0,123,255,0.3);
-      top:-150px;
-      left:-150px;
-    }
-
-    body::after {
-      background: rgba(0,255,255,0.2);
-      bottom:-150px;
-      right:-150px;
-    }
-
-    /* NAVBAR */
-    .navbar {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  padding:15px 20px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:15px;
-  align-items:center;
-  border-bottom:1px solid rgba(255,255,255,0.15);
-}
-
-    .navbar a {
-      color:#ddd;
-      text-decoration:none;
-      font-weight:500;
-      transition:0.3s;
-    }
-
-    .navbar a:hover {
-      color:#00c6ff;
-    }
-
-    .navbar button {
-      margin-left:auto;
-      background: linear-gradient(90deg,#00c6ff,#0072ff);
-      border:none;
-      padding:8px 18px;
-      border-radius:25px;
-      color:white;
-      cursor:pointer;
-      font-weight:bold;
-    }
-
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 12px;
-}
-
-@media (min-width: 640px) {
-  .container {
-    padding: 20px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    padding: 40px;
-  }
-}
-
-    h3 {
-      margin-bottom:20px;
-      color:#ddd;
-    }
-
-    /* GLASS CARD */
-    .card {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(15px);
-      padding:25px;
-      border-radius:20px;
-      box-shadow:0 20px 40px rgba(0,0,0,0.4);
-      border:1px solid rgba(255,255,255,0.15);
-      margin-bottom:30px;
-    }
-
-    /* FORM */
-    .form-row {
-      display:flex;
-      gap:15px;
-      flex-wrap:wrap;
-    }
-    @media (max-width:600px){
-
-  .form-row{
-    flex-direction:column;
-  }
-
-  .form-row input,
-  .form-row select,
-  .form-row button{
-    width:100%;
-  }
-
-}
-
-    input, select {
-  padding:12px;
-  min-height:42px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.08);
-  flex:1;
-  min-width:160px;
-  outline:none;
-  transition:0.3s;
-}
-
-    input:focus, select:focus {
-      border-color:#00c6ff;
-    }
-
-    .primary-btn {
-      background: linear-gradient(90deg,#00c6ff,#0072ff);
-      border:none;
-      border-radius:25px;
-      padding:12px 25px;
-      cursor:pointer;
-      color:white;
-      font-weight:bold;
-      transition:0.3s;
-    }
-
-    .primary-btn:hover {
-      transform:translateY(-3px);
-    }
-
-    /* TABLE */
-    table {
-      width:100%;
-      border-collapse:collapse;
-    }
-
-    th, td {
-      padding:14px;
-      text-align:center;
-    }
-
-    th {
-      background: rgba(255,255,255,0.15);
-      color:#ddd;
-    }
-
-    tr {
-      border-bottom:1px solid rgba(255,255,255,0.1);
-    }
-
-    tr:hover {
-      background: rgba(255,255,255,0.05);
-    }
-
-    .status-paid {
-      color:#28a745;
-      font-weight:bold;
-    }
-
-    .status-unpaid {
-      color:#ffc107;
-      font-weight:bold;
-    }
-
-    @media (max-width:768px){
-
-  .navbar{
-    justify-content:center;
-  }
-
-  .navbar button{
-    width:100%;
-    margin-left:0;
-  }
-
-}
-
-.navbar a{
-  white-space:nowrap;
-}
-
-@media (max-width:600px){
-
-  .navbar{
-    overflow-x:auto;
-    flex-wrap:nowrap;
-  }
-
-  .navbar::-webkit-scrollbar{
-    display:none;
-  }
-
-}
-
-
-
-
-@media (max-width:480px){
-
-  body::before,
-  body::after{
-    width:250px;
-    height:250px;
-  }
-
-}
-@media (max-width:600px){
-
-  table{
-    font-size:13px;
-  }
-
-}
-.delete-btn{
-  background:#dc3545;
-  border:none;
-  padding:6px 12px;
-  border-radius:8px;
-  color:white;
-  cursor:pointer;
-}
-
-.table-wrapper{
-  width:100%;
-  overflow-x:auto;
-}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/claymorphism.css">
 </head>
 
 <body>
 
-<div class="navbar">
-  <a href="/dashboard.html">Dashboard</a>
-  <a href="/patients.html">Patients</a>
-  <a href="/doctors.html">Doctors</a>
-  <a href="/appointments.html">Appointments</a>
-  <a href="/billing.html">Billing</a>
-  <a href="/reports.html">Reports</a>
-  <button onclick="logout()">Logout</button>
-</div>
+  <!-- Ambient Animated Background Blobs -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+  <div class="bg-blob blob-4"></div>
 
-<div class="container">
+  <div class="app-layout">
+    
+    <!-- Clay Sidebar -->
+    <div class="clay-sidebar">
+      <div class="clay-brand">
+        <div class="brand-icon">S</div>
+        <h1 class="brand-name">SmartCare</h1>
+      </div>
+      
+      <ul class="nav-list">
+        <li><a href="/dashboard.html" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a></li>
+        <li><a href="/patients.html" class="nav-link"><span class="nav-icon">👥</span> Patients</a></li>
+        <li><a href="/doctors.html" class="nav-link"><span class="nav-icon">👨‍⚕️</span> Doctors</a></li>
+        <li><a href="/appointments.html" class="nav-link"><span class="nav-icon">📅</span> Appointments</a></li>
+        <li><a href="/billing.html" class="nav-link active"><span class="nav-icon">💳</span> Billing</a></li>
+        <li><a href="/reports.html" class="nav-link"><span class="nav-icon">📈</span> Reports</a></li>
+      </ul>
 
-  <div class="card">
-    <h3>Create Bill</h3>
-    <div class="form-row">
-      <select id="billAppointment"></select>
-      <input type="number" id="consultationFee" placeholder="Consultation Fee">
-      <input type="number" id="extraCharges" placeholder="Extra Charges">
-      <select id="paymentMethod">
-        <option value="">Payment Method</option>
-        <option>Cash</option>
-        <option>UPI</option>
-        <option>Card</option>
-      </select>
-      <button class="primary-btn" onclick="createBill()">Generate</button>
+      <div class="sidebar-footer">
+        <button onclick="logout()" class="btn-clay btn-clay-danger btn-full"><span class="nav-icon">🚪</span> Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      
+      <!-- Top Navbar -->
+      <div class="clay-navbar">
+        <div class="navbar-links">
+          <a href="/dashboard.html" class="navbar-item">Dashboard</a>
+          <a href="/patients.html" class="navbar-item">Patients</a>
+          <a href="/doctors.html" class="navbar-item">Doctors</a>
+          <a href="/appointments.html" class="navbar-item">Appointments</a>
+          <a href="/billing.html" class="navbar-item active">Billing</a>
+          <a href="/reports.html" class="navbar-item">Reports</a>
+        </div>
+        <button onclick="logout()" class="btn-clay btn-clay-danger btn-sm">Logout</button>
+      </div>
+
+      <!-- Form Card -->
+      <div class="clay-card">
+        <h3 class="clay-card-title">💳 Create Bill</h3>
+        <div class="form-row">
+          <div class="form-group" style="min-width: 220px;">
+            <label class="form-label" for="billAppointment">Select Appointment</label>
+            <div class="clay-select-wrapper">
+              <select id="billAppointment" class="clay-select"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="consultationFee">Consultation Fee (₹)</label>
+            <input type="number" id="consultationFee" class="clay-input" placeholder="Amount">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="extraCharges">Extra Charges (₹)</label>
+            <input type="number" id="extraCharges" class="clay-input" placeholder="Optional">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="paymentMethod">Payment Method</label>
+            <div class="clay-select-wrapper">
+              <select id="paymentMethod" class="clay-select">
+                <option value="">Payment Method</option>
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Card">Card</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="justify-content: flex-end; min-width: 140px;">
+            <button class="btn-clay btn-clay-primary" onclick="createBill()" style="height: 50px;">⚡ Generate Bill</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="clay-card">
+        <h3 class="clay-card-title">📜 Billing History</h3>
+        <div class="clay-table-container">
+          <div class="table-responsive">
+            <table class="clay-table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Total</th>
+                  <th>Payment Method</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="billTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <div class="card">
-    <h3>Bill List</h3>
-  <div class="table-wrapper">
-<table>
-      <thead>
-<tr>
-  <th>Patient</th>
-  <th>Doctor</th>
-  <th>Total</th>
-  <th>Payment Method</th>
-  <th>Status</th>
-  <th>Date</th>
-  <th>Action</th>
-</tr>
-</thead>
-      <tbody id="billTable"></tbody>
-    </table>
-    </div>
-  </div>
-
-</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
@@ -323,46 +127,66 @@ if(!token){
 }
 
 async function loadBillingAppointments(){
-  const res=await fetch(`${API}/appointments`,{
-    headers:{ Authorization:"Bearer "+token }
-  });
-  const data=await res.json();
-  billAppointment.innerHTML="<option>Select Appointment</option>";
-  data.forEach(a=>{
-    billAppointment.innerHTML+=`
-      <option value="${a._id}">
-        ${a.patient?.name} - ${a.doctor?.name}
-      </option>`;
-  });
+  try {
+    const res=await fetch(`${API}/appointments`,{
+      headers:{ Authorization:"Bearer "+token }
+    });
+    const data=await res.json();
+    const billAppointment = document.getElementById("billAppointment");
+    billAppointment.innerHTML="<option value=''>Select Appointment</option>";
+    if (Array.isArray(data)) {
+      data.forEach(a=>{
+        billAppointment.innerHTML+=`
+          <option value="${a._id}">
+            ${a.patient?.name || 'Unknown Patient'} - Dr. ${a.doctor?.name || 'Unknown Doctor'}
+          </option>`;
+      });
+    }
+  } catch(e) { console.error(e); }
 }
 
 async function loadBills(){
-  const res=await fetch(`${API}/billing`,{
-    headers:{ Authorization:"Bearer "+token }
-  });
-  const data=await res.json();
-  const table=document.getElementById("billTable");
-  table.innerHTML="";
+  try {
+    const res=await fetch(`${API}/billing`,{
+      headers:{ Authorization:"Bearer "+token }
+    });
+    const data=await res.json();
+    const table=document.getElementById("billTable");
+    table.innerHTML="";
 
-  data.forEach(b=>{
-  table.innerHTML+=`
-    <tr>
-      <td>${b.patient?.name || "Unknown"}</td>
-      <td>${b.doctor?.name || "Unknown"}</td>
-      <td>₹${b.totalAmount}</td>
-      <td>${b.paymentMethod}</td>
-      <td class="${b.paymentStatus==="Paid"?"status-paid":"status-unpaid"}">
-        ${b.paymentStatus}
-      </td>
-      <td>${new Date(b.createdAt).toLocaleDateString()}</td>
-      <td>
-        <button class="delete-btn" onclick="deleteBill('${b._id}')">Delete</button>
-      </td>
-    </tr>`;
-});
+    if(!Array.isArray(data) || data.length === 0){
+      table.innerHTML="<tr><td colspan='7' style='text-align:center; color: var(--text-secondary); padding: 30px;'>No bills generated yet</td></tr>";
+      return;
+    }
+
+    data.forEach(b=>{
+      const isPaid = b.paymentStatus === "Paid";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="font-weight: 700; color: var(--text-primary);">${b.patient?.name || "Unknown"}</td>
+        <td>Dr. ${b.doctor?.name || "Unknown"}</td>
+        <td style="font-weight: 800; color: var(--accent-primary);">₹${b.totalAmount}</td>
+        <td><span class="badge-clay badge-primary">${b.paymentMethod || "N/A"}</span></td>
+        <td>
+          <span class="badge-clay ${isPaid ? 'badge-paid' : 'badge-unpaid'}">
+            ${b.paymentStatus || 'Pending'}
+          </span>
+        </td>
+        <td>${new Date(b.createdAt).toLocaleDateString()}</td>
+        <td style="text-align: center;">
+          <button class="btn-clay btn-clay-danger btn-sm" onclick="deleteBill('${b._id}')">🗑️ Delete</button>
+        </td>
+      `;
+      table.appendChild(tr);
+    });
+  } catch(e) { console.error(e); }
 }
 
 window.createBill = async function () {
+  const billAppointment = document.getElementById("billAppointment");
+  const consultationFee = document.getElementById("consultationFee");
+  const extraCharges = document.getElementById("extraCharges");
+  const paymentMethod = document.getElementById("paymentMethod");
 
   if (!billAppointment.value) {
     alert("Please select appointment");
@@ -377,9 +201,7 @@ window.createBill = async function () {
   if (!paymentMethod.value) {
     alert("Select payment method");
     return;
-    
   }
-  
 
   const res = await fetch(`${API}/billing`, {
     method: "POST",
@@ -404,13 +226,13 @@ window.createBill = async function () {
 
   alert("Bill Generated Successfully!");
   billAppointment.value="";
-consultationFee.value="";
-extraCharges.value="";
-paymentMethod.value="";
+  consultationFee.value="";
+  extraCharges.value="";
+  paymentMethod.value="";
   loadBills();
 };
-window.deleteBill = async function(id){
 
+window.deleteBill = async function(id){
   if(!confirm("Delete this bill?")) return;
 
   const res = await fetch(`${API}/billing/${id}`,{
@@ -426,9 +248,9 @@ window.deleteBill = async function(id){
   }
 
   alert("Bill deleted successfully");
-
   loadBills();
 };
+
 window.logout=function(){
   localStorage.clear();
   window.location.href="/";
